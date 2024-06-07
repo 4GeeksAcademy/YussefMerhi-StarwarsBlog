@@ -58,11 +58,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 					 let urlArr = element.url?.split("/");
 					 return urlArr[urlArr.length - 2];
 					});
-			}, 
+			},
+			selectCategory: (uidToAnalyze) => {
+				let categorySelected = ""
+				switch(uidToAnalyze[0]) {
+					case "c":
+						categorySelected = "characters"
+						break
+					case "s":
+						categorySelected = "starships"
+						break  
+					case "p":
+						categorySelected = "planets"
+						break    
+					case "e":
+						categorySelected = "species"
+						break
+					case "v":
+						categorySelected = "vehicles"
+						break    
+					case "f":
+						categorySelected = "films"
+						break    
+				}
+				return categorySelected
+			},
+			addFavorite: (nameToAdd, uidToAdd) => {
+				const updatedFavorites =  [...getStore().favorites, {title: nameToAdd, uid: uidToAdd }]
+				setStore({ favorites: updatedFavorites });
+			},
+			removeFavorite: (uidToRemove) => {
+				const updatedFavorites = getStore().favorites.filter((favorite) => {
+					return !(favorite.uid === uidToRemove);
+				});
+				setStore({ favorites: updatedFavorites });
+			},
 			loadSomeData: () => {
 				/**
 					fetch().then().then(data => setStore({ "foo": data.bar }))
 				*/
+				getActions().getCharacters()
+				getActions().getStarships()
+				getActions().getPlanets()
+				getActions().getSpecies()
+				getActions().getVehicles()
+				getActions().getFilms()
 			},
 		}
 	};
