@@ -5,5 +5,11 @@ body {
     background-image: url("https://wallpapers.com/downloads/high/star-wars-space-background-1920-x-1080-f1o3qr8zm0z4662c.webp");
 }
 .sw-logo {
-    width: 100px
+    width: 120px
+}
+
+.img-size {
+    height: 286px;
+    object-fit: cover;
+    object-position: 30% 30%;
 }

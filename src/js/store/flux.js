@@ -2,107 +2,72 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			characters: [],
-			starships: [],
 			planets: [],
-			species: [],
-			vehicles: [],
-			films: [],
-			favorites: [],
+			singleCharacter: {},
+			singleCharacterProperties: {},
+			singlePlanet: {},
+			singlePlanetProperties: {},
+			starships: [],
+			singleStarship: {},
+			singleStarshipProperties: {},
+			favorites: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 			getCharacters: () => {
-				fetch("https://www.swapi.tech/api/people/")
-				.then(response => response.json())
-				.then(data => {
-					setStore({ characters: data.results});
-				});
-			},
-			getStarships: () => {
-				fetch("https://www.swapi.tech/api/starships/")
-				.then(response => response.json())
-				.then(data => {
-					setStore({ starships: data.results });
-				});
+				fetch(`https://www.swapi.tech/api/people/`)
+					.then(res => res.json())
+					.then(data => setStore({ characters: data.results }))
+					.catch(err => console.error(err))
 			},
 			getPlanets: () => {
-				fetch("https://www.swapi.tech/api/planets/")
-				.then(response => response.json())
-				.then(data => {
-					setStore({ planets: data.results });
-				});
+				fetch(`https://www.swapi.tech/api/planets`)
+					.then(res => res.json())
+					.then(data => setStore({ planets: data.results }))
+					.catch(err => console.error(err))
 			},
-			getSpecies: () => {
-				fetch("https://www.swapi.tech/api/species/")
-				.then(response => response.json())
-				.then(data => {
-					setStore({ species: data.results });
-				});
+			getCharactersSingle: (id) => {
+
+				fetch(`https://www.swapi.tech/api/people/${id}`)
+					.then(res => res.json())
+					.then(data => setStore({ singleCharacter: data.result }, setStore({ singleCharacterProperties: data.result.properties })))
+					.catch(err => console.error("no hubo conexion en getCharacterSingle", err))
 			},
-			getVehicles: () => {
-				fetch("https://www.swapi.tech/api/vehicles/")
-				.then(response => response.json())
-				.then(data => {
-					setStore({ vehicles: data.results });
-				});
+			getPlanetsSingle: (id) => {
+
+				fetch(`https://www.swapi.tech/api/planets/${id}`)
+					.then(res => res.json())
+					.then(data => setStore({ singlePlanet: data.result }, setStore({ singlePlanetProperties: data.result.properties })))
+					.catch(err => console.error("no hubo conexion en getCharacterSingle", err))
 			},
-			getFilms: () => {
-				fetch("https://www.swapi.tech/api/films/")
-				.then(response => response.json())
-				.then(data => {
-					setStore({ films: data.results });
-				});
+			getStarships: () => {
+				fetch(`https://www.swapi.tech/api/starships/`)
+					.then(res => res.json())
+					.then(data => setStore({ starships: data.results }))
+					.catch(err => console.error(err))
 			},
-			getUID: (category) => {
-				return getStore()[category].map(element => { 
-					 let urlArr = element.url?.split("/");
-					 return urlArr[urlArr.length - 2];
-					});
+			getStarshipSingle: (id) => {
+
+				fetch(`https://www.swapi.tech/api/starships/${id}`)
+					.then(res => res.json())
+					.then(data => setStore({ singleStarship: data.result }, setStore({ singleStarshipProperties: data.result.properties })))
+					.catch(err => console.error("no hubo conexion en getCharacterSingle", err))
 			},
-			selectCategory: (uidToAnalyze) => {
-				let categorySelected = ""
-				switch(uidToAnalyze[0]) {
-					case "c":
-						categorySelected = "characters"
-						break
-					case "s":
-						categorySelected = "starships"
-						break  
-					case "p":
-						categorySelected = "planets"
-						break    
-					case "e":
-						categorySelected = "species"
-						break
-					case "v":
-						categorySelected = "vehicles"
-						break    
-					case "f":
-						categorySelected = "films"
-						break    
-				}
-				return categorySelected
+			getFavorite: (name) => {
+				let storeFavorites = getStore().favorites
+				setStore({ favorites: [...storeFavorites, name] })
+
 			},
-			addFavorite: (nameToAdd, uidToAdd) => {
-				const updatedFavorites =  [...getStore().favorites, {title: nameToAdd, uid: uidToAdd }]
-				setStore({ favorites: updatedFavorites });
-			},
-			removeFavorite: (uidToRemove) => {
-				const updatedFavorites = getStore().favorites.filter((favorite) => {
-					return !(favorite.uid === uidToRemove);
-				});
-				setStore({ favorites: updatedFavorites });
+			removeFavorite: (index) => {
+				let storeFavorites = getStore().favorites
+				storeFavorites.splice(index, 1)
+				setStore({ favorites: storeFavorites })
+
 			},
 			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
 				getActions().getCharacters()
-				getActions().getStarships()
 				getActions().getPlanets()
-				getActions().getSpecies()
-				getActions().getVehicles()
-				getActions().getFilms()
+				getActions().getStarships()
 			},
 		}
 	};
