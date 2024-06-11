@@ -10,7 +10,7 @@ const CardPlanets = () => {
         <>
             {store.planets.map((value, index) => (
                 <div key={index}>
-                    <div className="card bg-dark" style={{ width: "18rem" }}>
+                    <div className="card bg-dark text-light" style={{ width: "18rem" }}>
                         <img
                             src={`${value.uid === 1 ? "https://starwars-visualguide.com/assets/img/placeholder.jpg" : `https://starwars-visualguide.com/assets/img/planets/${value.uid}.jpg`}`}
                             className="img-size"
